@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>
+        {% block 'title' %}
+        Main
+        {% endblock %}
+    </title>
+
+
+<style>
+        {% block 'style' %}
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background-image: url('/static/img/kkkkk.jpg'); /* Replace 'your_image_path.jpg' with the path to your image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif; /* Adding a fallback font */
+            margin: 0;
+            padding: 0;
+        }
+        .imageColumn {
+            float: left;
+            width: 25%;
+            padding: 10px;
+        }
+        .navbar{
+            background-color: black;
+            border-radius: 30px;
+        }
+        .navbar ul{
+            overflow: auto;
+        }
+        .navbar li{
+            float:left;
+            list-style: none;
+            margin: 13px 20px;
+        }
+        .navbar li a{
+            padding: 3px 3px;
+            text-decoration: none;
+            color: white;
+        }
+        .navbar li a:hover{
+            color: red;
+        }
+        .search{
+            float: right;
+            color: white;
+            padding: 12px 75px;
+        }
+        .navbar input{
+            border: 2px solid black;
+            border-radius: 14px;
+            padding: 3px 17px;
+            width: 129px;
+        }
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+            color: white; /* Change text color to white */
+        }
+        th {
+            background-color: black; /* Header background color */
+        }
+
+        {% endblock %}
+    </style>
+
+
+
+
+</head>
+<body>
+
+<h1 align="center" style="color: white;">WAREHOUSE PORTAL</h1>
+
+<br>
+
+ <header>
+        <nav class="navbar">
+            <ul>
+        <li><a href="create_item.html">Products</a></li>
+        <li><a href="add_category.html">Add Category</a></li>
+        <li><a href="view_order_items.html">Orders</a></li>
+        <li><a href="view_payment_details.html">View Payments</a></li>
+        <li><a href="all_comments.html">Reports</a></li>
+        <li><a href="view_users.html">Sign out</a></li>
+            </ul>
+        </nav>
+    </header>
+<h1 align="center" style="color: white;">Order Items List</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Item</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order_item in order_items %}
+                <tr>
+                    <td>{{ order_item.user }}</td>
+                    <td>{{ order_item.item }}</td>
+                    <td>{{ order_item.quantity }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        {% block 'title' %}
+        Main
+        {% endblock %}
+    </title>
+
+
+    <style>
+        {% block 'style' %}
+        * {
+           box-sizing: border-box;
+        }
+        body {
+            background-image: url('/static/img/kkkkk.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif; /* Adding a fallback font */
+            margin: 0;
+            padding: 0;
+        }
+        .navbar{
+            background-color: black;
+            border-radius: 30px;
+        }
+        .navbar ul{
+            overflow: auto;
+        }
+        .navbar li{
+            float:left;
+            list-style: none;
+            margin: 13px 20px;
+            position: relative; /* Added */
+        }
+        .navbar li a{
+            padding: 3px 3px;
+            text-decoration: none;
+            color: white;
+        }
+        .navbar li a:hover{
+            color: red
+        }
+        .search{
+            float: right;
+            color: white;
+            padding: 12px 75px;
+        }
+        .navbar input{
+            border: 2px solid black;
+            border-radius: 14px;
+            padding: 3px 17px;
+            width: 129px;
+        }
+        .sub-menu {
+            display: none;
+            position: absolute;
+            background-color: black;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .navbar li:hover .sub-menu {
+            display: block;
+        }
+        table {
+            color: white; /* Set text color of the table */
+        }
+        {% endblock %}
+    </style>
+</head>
+<body>
+    <h1 align="center" style="color: white;"> TRANSPORTATION PORTAL</h1>
+    <br>
+
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li>  <a href="/delivery_status.html">DELIVERY STATUS</a></li>
+                <li>  <a href="#">DELIVERY PERSONS DEATILS</a></li>
+                <li>  <a href="view_users.html">SIGN OUT</a></li>
+            </ul>
+        </nav>
+    </header>
+<body>
+    <h1 align="center" style="color: white;"> Display Form Data</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ORDERED</th>
+                <th>BEING DELIVERED</th>
+                <th>RECEIVED</th>
+                <th>REFUND REQUESTED</th>
+                <th>REFUND GRANTED</th>
+                <th>SHIPPING ADDRESS</th>
+                <th>COUPON</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cart in carts %}
+            <tr>
+                <td>{{ cart.ordered }}</td>
+                <td>{{ cart.being_delivered }}</td>
+                <td>{{ cart.received }}</td>
+                <td>{{ cart.refund_requested }}</td>
+                <td>{{ cart.refund_granted }}</td>
+                <td>{{ cart.shipping_address }}</td>
+                <td>{{ cart.coupon }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

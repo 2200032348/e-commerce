@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>User List</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Add User</h2>
+  <form id="add-user-form">
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+    <br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required>
+    <br>
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name" required>
+    <br>
+    <button type="submit">Add User</button>
+  </form>
+
+  <script>
+    // Handle form submission to add a new user
+    document.getElementById('add-user-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Get form data
+      const formData = new FormData(event.target);
+      const username = formData.get('username');
+      const email = formData.get('email');
+      const first_name = formData.get('first_name');
+      const last_name = formData.get('last_name');
+
+      // Send a POST request to the /api/users endpoint
+      fetch('/api/users/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          first_name: first_name,
+          last_name: last_name
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Add the new user to the table
+        const table = document.querySelector('table tbody');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${data.username}</td>
+          <td>${data.email}</td>
+          <td>${data.first_name}</td>
+          <td>${data.last_name}</td>
+        `;
+        table.appendChild(row);
+
+        // Clear form fields
+        event.target.reset();
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
+    });
+  </script>
+{% endblock %}

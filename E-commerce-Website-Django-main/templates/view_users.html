@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        {% block 'title' %}
+        Main
+        {% endblock %}
+    </title>
+
+    <style>
+        {% block 'style' %}
+        * {
+           box-sizing: border-box;
+        }
+        body {
+            background-image: url('/static/img/kkkkk.jpg'); /* Replace 'background.jpg' with the path to your image */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif; /* Adding a fallback font */
+            margin: 0;
+            padding: 0;
+        }
+        .navbar{
+            background-color: black;
+            border-radius: 30px;
+        }
+        .navbar ul{
+            overflow: auto;
+        }
+        .navbar li{
+            float:left;
+            list-style: none;
+            margin: 13px 20px;
+            position: relative; /* Added */
+        }
+        .navbar li a{
+            padding: 3px 3px;
+            text-decoration: none;
+            color: white;
+        }
+        .navbar li a:hover{
+            color: red
+        }
+        .search{
+            float: right;
+            color: white;
+            padding: 12px 75px;
+        }
+        .navbar input{
+            border: 2px solid black;
+            border-radius: 14px;
+            padding: 3px 17px;
+            width: 129px;
+        }
+        .sub-menu {
+            display: none;
+            position: absolute;
+            background-color: black;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .navbar li:hover .sub-menu {
+            display: block;
+        }
+        ul li {
+            color: white; /* Added to make list items white */
+        }
+        {% endblock %}
+    </style>
+</head>
+<body>
+    <h1 align="center" style="color: white;">ADMIN PORTAL</h1>
+    <br>
+
+    <header>
+        <nav class="navbar">
+            <ul>
+                <li>  <a href="create_item.html">WAREHOUSE</a></li>
+                <li>  <a href="delivery_status.html">TRANSPORATION</a></li>
+                <li><a href="create_user.html">ADD CUSTOMERS</a></li>
+                <li><a href="view_users.html">VIEW CUSTOMERS</a></li>
+                <li><a href="accounts/login/">SIGN OUT</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1 align="center" style="color: white;">User List</h1>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.username }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

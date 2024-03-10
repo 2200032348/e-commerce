@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Approval</title>
+</head>
+<body>
+    <h1>Pending Refunds</h1>
+    <ul>
+        {% for refund in pending_refunds %}
+            <li>
+                Order: {{ refund.order }}<br>
+                Reference code: {{ refund.reference_code }}<br>
+                Reason: {{ refund.reason }}<br>
+                Email: {{ refund.email }}<br>
+                Status: Pending<br>
+               <form action="static/assign_status.html" method="post">
+
+                    {% csrf_token %}
+                    <select name="status">
+                        <option value="approved">Approve</option>
+                        <option value="rejected">Reject</option>
+                    </select>
+                    <button type="submit">Submit</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h1>Approved Refunds</h1>
+    <ul>
+        {% for refund in approved_refunds %}
+            <li>
+                Order: {{ refund.order }}<br>
+                Reference code: {{ refund.reference_code }}<br>
+                Reason: {{ refund.reason }}<br>
+                Email: {{ refund.email }}<br>
+                Status: Approved
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h1>Rejected Refunds</h1>
+    <ul>
+        {% for refund in rejected_refunds %}
+            <li>
+                Order: {{ refund.order }}<br>
+                Reference code: {{ refund.reference_code }}<br>
+                Reason: {{ refund.reason }}<br>
+                Email: {{ refund.email }}<br>
+                Status: Rejected
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,110 @@
+{% load static %}
+<html>
+<head>
+    <title>
+        {% block 'title' %}
+        Main
+        {% endblock %}
+    </title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+    <style>
+        {% block 'style' %}
+        * {
+           box-sizing: border-box;
+        }
+        body {
+           background-image: url("{% static 'D:\projects\E-commerce-Website-Django-main\static_in_env\img\kkkkk.jpg' %}");
+        /* Adjust background properties */
+        background-size: cover; /* Cover the entire container */
+        background-position: center; /* Center the background image */
+        /* Ensure content is visible on top of the image */
+        }
+        .navbar{
+            background-color: rgba(0, 0, 0, 0.5); /* Add transparency to navbar */
+            border-radius: 30px;
+        }
+        .navbar ul{
+            overflow: auto;
+        }
+        .navbar li{
+            float:left;
+            list-style: none;
+            margin: 13px 20px;
+            position: relative; /* Added */
+        }
+        .navbar li a{
+            padding: 3px 3px;
+            text-decoration: none;
+            color: white;
+        }
+        .navbar li a:hover{
+            color: red
+        }
+        .search{
+            float: right;
+            color: white;
+            padding: 12px 75px;
+        }
+        .navbar input{
+            border: 2px solid black;
+            border-radius: 14px;
+            padding: 3px 17px;
+            width: 129px;
+        }
+        .sub-menu {
+            display: none;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7); /* Add transparency to sub-menu */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .navbar li:hover .sub-menu {
+            display: block;
+        }
+        {% endblock %}
+    </style>
+</head>
+<body>
+    <h1 align="center" style="color: white;">WAREHOUSE PORTAL</h1>
+    <br>
+
+    <header>
+        <nav class="navbar">
+            <ul>
+               <li><a href="create_item.html">Products</a></li>
+        <li><a href="add_category.html">Add Category</a></li>
+        <li><a href="view_order_items.html">Orders</a></li>
+        <li><a href="view_payment_details.html">View Payments</a></li>
+        <li><a href="all_comments.html">Reports</a></li>
+        <li><a href="accounts/login/">Sign out</a></li>
+            </ul>
+        </nav>
+    </header>
+    <br>
+
+    {% block 'body' %}
+
+    {% endblock %}
+
+    <script>
+        // Keep the dropdown open until an option is selected
+        document.querySelectorAll('.has-dropdown').forEach(item => {
+            item.addEventListener('click', event => {
+                event.stopPropagation();
+                item.classList.toggle('active');
+            });
+        });
+
+        document.addEventListener('click', event => {
+            document.querySelectorAll('.has-dropdown').forEach(item => {
+                if (!item.contains(event.target)) {
+                    item.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Form</title>
+</head>
+<body>
+    <h1>Refund Request</h1>
+    <form method="POST" action="/refund/">
+        {% csrf_token %}
+        <label for="order">Order:</label>
+        <input type="text" id="order" name="order">
+        <br>
+        <label for="reference_code">Reference Code:</label>
+        <input type="text" id="reference_code" name="reference_code">
+        <br>
+        <label for="reason">Reason:</label>
+        <textarea id="reason" name="reason" rows="4" cols="50"></textarea>
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <br>
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+        </select>
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

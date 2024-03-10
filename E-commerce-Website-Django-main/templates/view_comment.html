@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIEW COMMENTS FOR PRODUCT</title>
+    <style>
+        /* Your CSS styles here */
+        * {
+            box-sizing: border-box;
+        }
+        .imageColumn {
+            float: left;
+            width: 25%;
+            padding: 10px;
+        }
+        .navbar {
+            background-color: black;
+            border-radius: 30px;
+        }
+        .navbar ul {
+            overflow: auto;
+        }
+        .navbar li {
+            float: left;
+            list-style: none;
+            margin: 13px 20px;
+        }
+        .navbar li a {
+            padding: 3px 3px;
+            text-decoration: none;
+            color: white;
+        }
+        .navbar li a:hover {
+            color: red;
+        }
+        .search {
+            float: right;
+            color: white;
+            padding: 12px 75px;
+        }
+        .navbar input {
+            border: 2px solid black;
+            border-radius: 14px;
+            padding: 3px 17px;
+            width: 129px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 align="center">ADMIN PORTAL</h1>
+<br>
+<header>
+    <nav class="navbar">
+        <ul>
+            <li><a href="admin_dashboard.html">Dashboard</a></li>
+            <li><a href="create_item.html">Products</a></li>
+            <li><a href="add_category.html">Add Category</a></li>
+            <li><a href="view_order_items.html">Orders</a></li>
+            <li><a href="create_user.html">Add Customers</a></li>
+            <li><a href="view_users.html">View Customers</a></li>
+            <li><a href="view_payment_details.html">View Payments</a></li>
+            <li><a href="all_comments.html">Reports</a></li>
+            <li><a href="accounts/login/">Sign out</a></li>
+        </ul>
+    </nav>
+</header>
+    <h1>comment List</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Item</th>
+                <th>Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Comments in Comments %}
+                <tr>
+                    <td>{{ Comment.user }}</td>
+                    <td>{{ Comment.item }}</td>
+                    <td>{{ Comment.comment }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

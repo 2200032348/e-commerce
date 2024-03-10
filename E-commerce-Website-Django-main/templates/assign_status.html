@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Refund Status</title>
+</head>
+<body>
+    <h1>Assign Refund Status</h1>
+    <form action="#" method="post">
+        {% csrf_token %}
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
