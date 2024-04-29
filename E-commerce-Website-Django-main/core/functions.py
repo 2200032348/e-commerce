@@ -1,107 +1,134 @@
 from django.shortcuts import redirect
-from django.contrib.auth.mixins import AccessMixin
-from django.db.models import CharField
-from django.db.models import  Q
+from django.contrib.auth.mixins import LoginRequiredMixin  # Use LoginRequiredMixin
+from django.db.models import CharField, Q
 from django.core.paginator import Paginator
 from django.contrib import messages
 
-import dotenv
 import os
 from datetime import datetime, timedelta
 
 from .admin import ADMIN_REGISTER
-from data.config import  COOKIE, read_env
+from data.config import COOKIE, get_env_var  # Use get_env_var function
 
 
 LOGIN_URL = "dashboard:login"
 
 
-# Page
-def Page(request, model, page_size=31):
-	# Paginator
-	page_size = request.GET.get('page_size', page_size)
-	paginator = Paginator(model, page_size)
-	page_num = request.GET.get('page', 1)
-	page = paginator.get_page(page_num)
+# Page function with improved clarity and error handling
+def get_paginated_data(request, model, page_size=30):
+    """
+    Retrieves paginated data for the specified model.
 
-	return page
+    Args:
+        request (HttpRequest): The Django request object.
+        model (Model): The Django model to paginate.
+        page_size (int, optional): The number of items per page. Defaults to 30.
 
+    Returns:
+        Paginator: The paginator object containing the paginated data.
+        int: The current page number.
+    """
 
-# Admin register
-class ModelsData:
-	def get_(self, unique_name):
-		for dict_data in ADMIN_REGISTER:
-			# Model name read
-			name = dict_data['model']._meta.verbose_name
+    try:
+        page_size = int(request.GET.get('page_size', page_size))
+        if page_size <= 0:
+            raise ValueError("Page size must be a positive integer")
+    except ValueError:
+        messages.error(request, "Invalid page size. Using default (30).")
+        page_size = 30
 
-			if str(name) == str(unique_name):
-				return dict_data
+    paginator = Paginator(model, page_size)
+    page_num = request.GET.get('page', 1)
+    try:
+        page = paginator.get_page(page_num)
+    except (ValueError, InvalidPage):  # Handle potential pagination errors
+        messages.error(request, "Invalid page number. Redirecting to first page.")
+        return paginator.page(1)
 
-	def all_(self, request, unique_name):
-
-		for dict_data in ADMIN_REGISTER:
-			# Model name read
-			name = dict_data['model']._meta.verbose_name
-
-			if str(name) == str(unique_name):
-				model = dict_data['model'].objects.all().order_by('-id')
-				# Paginator
-				page_obj = Page(request, model)
-
-				return page_obj
-
-
-# Is admin
-class IsAdmin(AccessMixin):
-	def dispatch(self, request, *args, **kwargs):
-		cookie = request.COOKIES.get(COOKIE)
-		if not cookie == read_env()['PASSWORD']:
-			return redirect(LOGIN_URL)
-
-		try:
-			return super().dispatch(request, *args, **kwargs)
-		except Exception as e:
-			print(e)
-			messages.error(request, "Error")
-			return redirect("dashboard:home")
-
-# obj
-def obj_filt(model, al):
-	table = ModelsData().get_(unique_name=str(model))
-
-	model_ = table['model'].objects.get(id=al)
-	return model_
+    return paginator, page
 
 
-# Model delete function
-def ModelDeleteFunc(model, ids):
-	model_ = ModelsData().get_(unique_name=str(model))
-	try:
-		if type(ids) == int or type(ids) == str:
-			delete = model_['model'].objects.get(id=int(ids))
-			delete.delete()
+# Admin register using a dictionary for clarity
+def get_admin_data(unique_name):
+    """
+    Retrieves data for the specified model from the ADMIN_REGISTER dictionary.
 
-			return True
+    Args:
+        unique_name (str): The unique name of the model.
 
-		# ids > 1
-		for id in ids:
-			delete = model_['model'].objects.get(id=int(id))
-			delete.delete()
+    Returns:
+        dict, None: A dictionary containing model information or None if not found.
+    """
 
-		return True
-	except Exception as e:
-		return False
+    for data in ADMIN_REGISTER:
+        if data['model']._meta.verbose_name == unique_name:
+            return data
+    return None
 
-# Search table
-def SearchModel(request, table, search):
-	fields = [f for f in table._meta.fields if isinstance(f, CharField)]
-	queries = [Q(**{f.name+'__contains': search}) for f in fields]
-	qs = Q()
 
-	for query in queries:
-		qs = qs | query
+# IsAdmin class using LoginRequiredMixin for authentication
+class IsAdminMixin(LoginRequiredMixin):
+    """
+    Mixin class for admin user authentication. Redirects to login if not authenticated.
+    """
 
-	data = table.objects.filter(qs)
-	response = Page(request, data)
-	return response
+    def dispatch(self, request, *args, **kwargs):
+        cookie = request.COOKIES.get(COOKIE)
+        if cookie != get_env_var('PASSWORD'):
+            return redirect(LOGIN_URL)
 
+        try:
+            return super().dispatch(request, *args, **kwargs)
+        except Exception as e:
+            print(e)
+            messages.error(request, "Error occurred. Redirecting to dashboard home.")
+            return redirect("dashboard:home")
+
+
+# Object filter function with type checking
+def get_object(model, id):
+    """
+    Retrieves an object from the specified model by its ID.
+
+    Args:
+        model (Model): The Django model to query.
+        id (int, str): The ID of the object to retrieve.
+
+    Returns:
+        Model, None: The retrieved object or None if not found.
+    """
+
+    try:
+        if isinstance(id, int):
+            return model.objects.get(id=id)
+        elif isinstance(id, str):
+            try:
+                return model.objects.get(id=int(id))
+            except ValueError:
+                pass
+    except model.DoesNotExist:
+        pass
+    return None
+
+
+# Model delete function with error handling
+def delete_model(model, ids):
+    """
+    Deletes the specified model object(s).
+
+    Args:
+        model (Model): The Django model to delete from.
+        ids (int, str, list): The ID(s) of the object(s) to delete.
+
+    Returns:
+        bool: True if deletion was successful, False otherwise.
+    """
+
+    try:
+        if isinstance(ids, (int, str)):
+            obj = get_object(model, ids)
+            if obj:
+                obj.delete()
+                return True
+        elif isinstance(ids, list):
+            for
