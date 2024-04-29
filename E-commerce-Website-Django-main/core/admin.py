@@ -4,32 +4,32 @@ from django.contrib.auth.models import User
 from .models import (Item, OrderItem, Cart, Address, Category, Comment,
                      Payment, Coupon, Refund, UserProfile)
 
-admin.site.register(UserProfile)
-admin.site.register(Item)
-admin.site.register(Category)
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    pass
 
+@admin.register(Item)
+class ItemAdmin(admin.ModelAdmin):
+    pass
 
-class OrderAdmin(admin.ModelAdmin):
-    class Meta:
-        model = OrderItem
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    pass
 
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
     list_display = ["__str__", 'ordered']
 
-
-admin.site.register(OrderItem, OrderAdmin)
-
+    class Meta:
+        model = OrderItem
 
 def update_refund_request_to_true(model_admin, request, query_set):
     query_set.update(refund_requested=False, refund_granted=True)
 
+update_refund_request_to_true.short_description = "Update orders to refund granted"
 
-update_refund_request_to_true.short_description_message = "Update orders to refund granted"
-
-
+@admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    class Meta:
-        model = Cart
-
     list_display = ['__str__',
                     'ordered',
                     'being_delivered',
@@ -57,28 +57,22 @@ class CartAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'reference_code']
     actions = [update_refund_request_to_true]
 
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    pass
 
-admin.site.register(Cart, CartAdmin)
-admin.site.register(Address)
-admin.site.register(Payment)
-admin.site.register(Coupon)
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    pass
 
+@admin.register(Coupon)
+class CouponAdmin(admin.ModelAdmin):
+    pass
 
+@admin.register(Refund)
 class RefundAdmin(admin.ModelAdmin):
-    class Meta:
-        model = Refund
     list_display = ['__str__', 'order']
 
-
-admin.site.register(Refund, RefundAdmin)
-
-
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    class Meta:
-        model = Comment
     list_display = ['__str__', 'user']
-
-
-admin.site.register(Comment, CommentAdmin)
-
-
